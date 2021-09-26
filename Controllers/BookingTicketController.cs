@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Project.DAL;
+using Project.Context;
 using Project.Models;
 using Swashbuckle.Swagger.Annotations;
 using System;
@@ -51,6 +51,8 @@ namespace Project.Controllers
 
                     var concert = dbContext.Concert
                         .Where(x => x.Title.Contains(requestModel.ConcertName)).FirstOrDefault();
+
+                    if(concert == null) return BadRequest($"Concert {requestModel.ConcertName} not found");
 
                     var bookTicket = dbContext.ConcertTicket
                         .Where(x => x.ConcertId == concert.Id && x.StatusId == 0).FirstOrDefault();
